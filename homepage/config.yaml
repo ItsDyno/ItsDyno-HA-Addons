@@ -1,0 +1,36 @@
+name: Homepage
+description: >-
+  A modern, fully static, fast, secure, fully proxied, highly customizable
+  application dashboard with integrations for over 100 services and
+  translations for over 40 languages.
+version: "1.2.0"
+slug: homepage
+url: https://gethomepage.dev
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+startup: application
+boot: auto
+init: false
+ports:
+  3000/tcp: 3000
+  3001/tcp: 3001
+ports_description:
+  3000/tcp: Homepage web interface
+  3001/tcp: Config Editor web interface
+map:
+  - addon_config:rw
+options:
+  port: 3000
+  allowed_hosts: ""
+  password: ""
+schema:
+  port: port
+  allowed_hosts: str
+  password: str
+watchdog: http://[HOST]:[PORT:3000]/
+panel_icon: mdi:view-dashboard
+panel_title: Homepage
