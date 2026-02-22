@@ -4,7 +4,7 @@
 
 <img src="https://img.shields.io/badge/Home%20Assistant-Add--ons-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white" alt="Home Assistant Add-ons"/>
 <img src="https://img.shields.io/badge/Made%20by-ItsDyno-ff6b35?style=for-the-badge" alt="Made by ItsDyno"/>
-<img src="https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge" alt="License"/>
+<img src="https://img.shields.io/badge/License-Custom%20Proprietary-red?style=for-the-badge" alt="License"/>
 
 ---
 
@@ -47,10 +47,8 @@ http://homeassistant.local:8123
 3. Plak de volgende URL in het invoerveld:
 
 ```
-https://github.com/ItsDyno/home-assistant-addons
+https://github.com/ItsDyno/ItsDyno-HA-Addons
 ```
-
-> ⚠️ **Let op:** Vervang de bovenstaande URL met de juiste link als deze afwijkt.
 
 4. Klik op **Toevoegen**
 5. Klik op **Sluiten**
@@ -58,7 +56,7 @@ https://github.com/ItsDyno/home-assistant-addons
 #### Stap 4 — Installeer een add-on
 
 1. Scroll naar beneden in de Add-on Store
-2. Onder het kopje **ItsDyno Add-ons** vind je de beschikbare add-ons
+2. Onder het kopje **ItsDyno-HA-Addons** vind je de beschikbare add-ons
 3. Klik op de gewenste add-on
 4. Klik op **Installeren**
 5. Wacht tot de installatie voltooid is ✅
@@ -132,10 +130,8 @@ http://homeassistant.local:8123
 3. Paste the following URL into the input field:
 
 ```
-https://github.com/ItsDyno/home-assistant-addons
+https://github.com/ItsDyno/ItsDyno-HA-Addons
 ```
-
-> ⚠️ **Note:** Replace the URL above with the correct link if it differs.
 
 4. Click **Add**
 5. Click **Close**
@@ -143,7 +139,7 @@ https://github.com/ItsDyno/home-assistant-addons
 #### Step 4 — Install an add-on
 
 1. Scroll down in the Add-on Store
-2. Under the **ItsDyno Add-ons** section, you'll find the available add-ons
+2. Under the **ItsDyno-HA-Addons** section, you'll find the available add-ons
 3. Click on the desired add-on
 4. Click **Install**
 5. Wait for the installation to complete ✅
@@ -185,7 +181,12 @@ Still stuck? Reach out via **info@itsdyno.nl**
 
 ### ⚖️ License
 
-This software is proprietary. You may **use** the add-ons, but you may **not** copy, modify, or redistribute them without written permission.
+This software is protected under a **Custom Proprietary License** by ItsDyno.
+
+✅ You **may use** the add-ons freely for personal or commercial purposes.
+❌ You may **not** copy, modify, or redistribute them without explicit written permission.
+
+Want to use the source code in your own project? Contact **info@itsdyno.nl** first.
 
 See [LICENSE](LICENSE) for full details.
 
