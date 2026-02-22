@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage – Config Editor</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --border: #334155;
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success: #22c55e;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Login ──────────────────────────────────────────────────────────── */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.4);
+    }
+
+    .login-box h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .login-box p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .error-msg {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: 0.6rem;
+    }
+
+    /* ── Editor layout ─────────────────────────────────────────────────── */
+    .editor-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 1rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toolbar-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn-save  { background: var(--success); color: #fff; }
+    .btn-save:hover { background: #16a34a; }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .btn-logout:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      padding: 0 0.5rem;
+    }
+
+    .tab {
+      padding: 0.55rem 1rem;
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .tab:hover {
+      color: var(--text);
+      background: var(--surface-hover);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab .new-badge {
+      color: var(--warning);
+      font-size: 0.7rem;
+      margin-left: 0.3rem;
+    }
+
+    .editor-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .editor-area textarea {
+      flex: 1;
+      width: 100%;
+      padding: 1rem;
+      background: var(--bg);
+      border: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.6;
+      resize: none;
+      outline: none;
+      tab-size: 2;
+    }
+
+    .status-bar {
+      padding: 0.35rem 1rem;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .status-bar .saved { color: var(--success); }
+    .status-bar .err   { color: var(--error); }
+
+    .hidden { display: none !important; }
+
+    /* ── Responsive ────────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .toolbar { padding: 0.4rem 0.6rem; }
+      .toolbar-title { font-size: 0.9rem; }
+      .tabs { padding: 0 0.2rem; }
+      .tab { padding: 0.45rem 0.7rem; font-size: 0.78rem; }
+      .editor-area textarea { padding: 0.6rem; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Login Screen ──────────────────────────────────────────────────── -->
+  <div id="login-view" class="login-container">
+    <div class="login-box">
+      <h1>🏠 Config Editor</h1>
+      <p>Enter the password set in the add-on configuration to edit Homepage config files.</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" autofocus>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <div id="login-error" class="error-msg hidden"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Editor Screen ─────────────────────────────────────────────────── -->
+  <div id="editor-view" class="editor-container hidden">
+    <div class="toolbar">
+      <span class="toolbar-title">🏠 Homepage Config Editor</span>
+      <div class="toolbar-actions">
+        <button id="btn-save" class="btn btn-save" onclick="saveFile()">💾 Save</button>
+        <button class="btn btn-logout" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div id="tabs" class="tabs"></div>
+    <div class="editor-area">
+      <textarea id="editor" spellcheck="false" placeholder="Select a file to start editing…"></textarea>
+    </div>
+    <div class="status-bar">
+      <span id="status">Ready</span>
+      <span id="file-info"></span>
+    </div>
+  </div>
+
+  <script>
+    /* ── State ──────────────────────────────────────────────────────────── */
+    let currentFile = null;
+    let files = [];
+
+    /* ── Login ──────────────────────────────────────────────────────────── */
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pw = document.getElementById('password').value;
+      const errEl = document.getElementById('login-error');
+      errEl.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pw }),
+        });
+        if (res.ok) {
+          showEditor();
+        } else {
+          const data = await res.json().catch(() => ({}));
+          errEl.textContent = data.error || 'Invalid password';
+          errEl.classList.remove('hidden');
+        }
+      } catch {
+        errEl.textContent = 'Connection error';
+        errEl.classList.remove('hidden');
+      }
+    });
+
+    /* ── Show / hide views ─────────────────────────────────────────────── */
+    function showEditor() {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('editor-view').classList.remove('hidden');
+      loadFiles();
+    }
+
+    function showLogin() {
+      document.getElementById('editor-view').classList.add('hidden');
+      document.getElementById('login-view').classList.remove('hidden');
+      document.getElementById('password').value = '';
+      document.getElementById('login-error').classList.add('hidden');
+    }
+
+    /* ── File list ──────────────────────────────────────────────────────── */
+    async function loadFiles() {
+      const res = await fetch('/api/files');
+      if (res.status === 401) return showLogin();
+      files = await res.json();
+      renderTabs();
+      if (files.length) selectFile(files[0].name);
+    }
+
+    function renderTabs() {
+      const tabsEl = document.getElementById('tabs');
+      tabsEl.innerHTML = '';
+      files.forEach(f => {
+        const div = document.createElement('div');
+        div.className = 'tab' + (f.name === currentFile ? ' active' : '');
+        div.textContent = f.name;
+        if (!f.exists) {
+          const badge = document.createElement('span');
+          badge.className = 'new-badge';
+          badge.textContent = 'new';
+          div.appendChild(badge);
+        }
+        div.addEventListener('click', () => selectFile(f.name));
+        tabsEl.appendChild(div);
+      });
+    }
+
+    /* ── Select & load file ────────────────────────────────────────────── */
+    async function selectFile(name) {
+      currentFile = name;
+      renderTabs();
+      setStatus('Loading…');
+
+      const res = await fetch('/api/file?' + new URLSearchParams({ name }));
+      if (res.status === 401) return showLogin();
+      const data = await res.json();
+      document.getElementById('editor').value = data.content;
+      document.getElementById('file-info').textContent = name;
+      setStatus('Ready');
+    }
+
+    /* ── Save ───────────────────────────────────────────────────────────── */
+    async function saveFile() {
+      if (!currentFile) return;
+      setStatus('Saving…');
+
+      const content = document.getElementById('editor').value;
+      const res = await fetch('/api/file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: currentFile, content }),
+      });
+      if (res.status === 401) return showLogin();
+
+      if (res.ok) {
+        setStatus('Saved ✓', 'saved');
+        const f = files.find(x => x.name === currentFile);
+        if (f) f.exists = true;
+        renderTabs();
+      } else {
+        setStatus('Error saving file', 'err');
+      }
+    }
+
+    /* ── Logout ─────────────────────────────────────────────────────────── */
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      showLogin();
+    }
+
+    /* ── Status bar helper ──────────────────────────────────────────────── */
+    function setStatus(msg, cls) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.className = cls || '';
+    }
+
+    /* ── Keyboard shortcuts ────────────────────────────────────────────── */
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveFile();
+      }
+    });
+
+    // Tab key inserts two spaces in the editor
+    document.getElementById('editor').addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const ta = e.target;
+        const start = ta.selectionStart;
+        const end   = ta.selectionEnd;
+        ta.value = ta.value.substring(0, start) + '  ' + ta.value.substring(end);
+        ta.selectionStart = ta.selectionEnd = start + 2;
+      }
+    });
+
+    /* ── Auto-login check (reuse existing session cookie) ──────────────── */
+    fetch('/api/files').then(r => {
+      if (r.ok) {
+        r.json().then(data => {
+          files = data;
+          showEditor();
+        });
+      }
+    }).catch(() => {});
+  </script>
+</body>
+</html>
